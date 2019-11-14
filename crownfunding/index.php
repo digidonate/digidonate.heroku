@@ -7,7 +7,7 @@ define('APP_PATH', __DIR__ . '/');
 define('APP_DEBUG', true);
 
 // root URL
-define('APP_URL', 'http://localhost/crowdfunding');
+define('APP_URL', 'https://digidonate.herokuapp.com/crowdfunding');
 
 // project images
 define('IMG_PROJ_URL', '/assets/img/project/');
