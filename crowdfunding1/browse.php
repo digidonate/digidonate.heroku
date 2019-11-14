@@ -11,8 +11,15 @@
 		<button type="submit">Return to Homepage</button>
 	</form>
 	<?php
+		define('DB_SERVER', 'lolyz0ok3stvj6f0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306');
+define('DB_USERNAME', 'bisz6nf2u5ymifre');
+define('DB_PASSWORD', 'ufcnqnkte0ofavy8');
+define('DB_NAME', 'fizn07ewny2rctav');
+ 
+/* Attempt to connect to MySQL database */
+$db = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 		// Connect to the database. Please change the password in the following line accordingly
-		$db = pg_connect("host=localhost port=5432 dbname=postgres user=postgres password=000000");
+		//$db = pg_connect("host=localhost port=5432 dbname=postgres user=postgres password=000000");
 		$funded = pg_query($db, "SELECT project_id, title, category, current_amount FROM publish_projects WHERE current_amount >= total_amount");
 		$unfunded = pg_query($db, "SELECT project_id, title, category, total_amount, total_amount - current_amount AS shortage FROM publish_projects WHERE current_amount < total_amount ORDER BY shortage DESC");
 		$num_funded = pg_fetch_result(pg_query($db, "SELECT COUNT(*) AS COUNT FROM publish_projects WHERE current_amount >= total_amount"), 0, 0);

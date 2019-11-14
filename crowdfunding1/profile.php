@@ -26,18 +26,25 @@
 	</div>
 	<br/>
 	<?php
+		define('DB_SERVER', 'lolyz0ok3stvj6f0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306');
+define('DB_USERNAME', 'bisz6nf2u5ymifre');
+define('DB_PASSWORD', 'ufcnqnkte0ofavy8');
+define('DB_NAME', 'fizn07ewny2rctav');
+ 
+/* Attempt to connect to MySQL database */
+$db = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 		// Connect to the database. Please change the password in the following line accordingly
-		$db = pg_connect("host=localhost port=5432 dbname=postgres user=postgres password=000000");
+		//$db = mysqli_connect("host=localhost port=5432 dbname=postgres user=postgres password=000000");
 		date_default_timezone_set("Asia/Singapore");
 		$current_time = date("Y-m-d H:i:s");
 		if ($_SESSION[userid] == NULL) {
 			echo "Please login to view your profile.";
 		}
 		else {
-			$profile = pg_fetch_assoc(pg_query($db, "SELECT * FROM users WHERE users.user_id = '$_SESSION[userid]'"));
-			$pub = pg_query($db, "SELECT p.project_id, p.title, p.category, p.total_amount, p.total_amount-p.current_amount AS shortage FROM Publish_Projects p INNER JOIN Users u ON u.user_id = p.publisher WHERE u.user_id = '$_SESSION[userid]'");
-			$fun = pg_query($db, "SELECT p.project_id, p.title, f.amount, f.fund_time FROM Publish_Projects p NATURAL JOIN Fund f NATURAL JOIN Users u WHERE u.user_id = '$_SESSION[userid]'");
-			$personal_sum = pg_fetch_result(pg_query($db, "SELECT SUM(f.amount) AS out FROM fund f NATURAL JOIN users u WHERE u.user_id = '$_SESSION[userid]'"), 0, 0);
+			$profile = mysqli_fetch_assoc(mysqli_query($db, "SELECT * FROM users WHERE users.user_id = '$_SESSION[userid]'"));
+			$pub = mysqli_query($db, "SELECT p.project_id, p.title, p.category, p.total_amount, p.total_amount-p.current_amount AS shortage FROM Publish_Projects p INNER JOIN Users u ON u.user_id = p.publisher WHERE u.user_id = '$_SESSION[userid]'");
+			$fun = mysqli_query($db, "SELECT p.project_id, p.title, f.amount, f.fund_time FROM Publish_Projects p NATURAL JOIN Fund f NATURAL JOIN Users u WHERE u.user_id = '$_SESSION[userid]'");
+			$personal_sum = mysqli_fetch_result(mysqli_query($db, "SELECT SUM(f.amount) AS out FROM fund f NATURAL JOIN users u WHERE u.user_id = '$_SESSION[userid]'"), 0, 0);
 	?>
 	<table>
 		<ul>
@@ -77,7 +84,7 @@
 		<th>Category</th>
 		<th>Total Amount</th>
 		<th>Shortage</th>
-		<?php while ($row = pg_fetch_assoc($pub)) { ?>
+		<?php while ($row = mysqli_fetch_assoc($pub)) { ?>
 			<tr>
 				<td align='center' width='200'> <?php echo $row['project_id'] ?> </td>
 				<td align='center' width='200'> <?php echo $row['title'] ?> </td>
@@ -93,7 +100,7 @@
 		<th>Title</th>
 		<th>Amount</th>
 		<th>Donating Time</th>
-		<?php while ($row = pg_fetch_assoc($fun)) { ?>
+		<?php while ($row = mysqli_fetch_assoc($fun)) { ?>
 			<tr>
 				<td align='center' width='200'> <?php echo $row['project_id'] ?> </td>
 				<td align='center' width='200'> <?php echo $row['title'] ?> </td>
@@ -107,7 +114,7 @@
 			echo $personal_sum ? "You have donated a total amount of $" . $personal_sum : "You have not made any donation";
 		}
 		if (isset($_POST[mod])) {
-			$res = pg_query($db, "UPDATE users SET password = '$_POST[psw]', name = '$_POST[name]', email = '$_POST[email]' WHERE user_id = '$_SESSION[userid]'");
+			$res = mysqli_query($db, "UPDATE users SET password = '$_POST[psw]', name = '$_POST[name]', email = '$_POST[email]' WHERE user_id = '$_SESSION[userid]'");
 			if (!$res) {
 				echo "<p>Invalid input(s)!</p>";
 			}

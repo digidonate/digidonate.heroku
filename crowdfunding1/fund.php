@@ -26,8 +26,15 @@
 	</div>
 	<br/>
 	<?php
+		define('DB_SERVER', 'lolyz0ok3stvj6f0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306');
+define('DB_USERNAME', 'bisz6nf2u5ymifre');
+define('DB_PASSWORD', 'ufcnqnkte0ofavy8');
+define('DB_NAME', 'fizn07ewny2rctav');
+ 
+/* Attempt to connect to MySQL database */
+$db = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 		// Connect to the database. Please change the password in the following line accordingly
-		$db = pg_connect("host=localhost port=5432 dbname=postgres user=postgres password=000000");
+		//$db = pg_connect("host=localhost port=5432 dbname=postgres user=postgres password=000000");
 		date_default_timezone_set("Asia/Singapore");
 		$current_time = date("Y-m-d H:i:s");
 		if ($_POST[project] != NULL) {

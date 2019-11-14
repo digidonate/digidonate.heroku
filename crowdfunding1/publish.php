@@ -26,8 +26,15 @@
 	</div>
 	<br/>
 	<?php
+		define('DB_SERVER', 'lolyz0ok3stvj6f0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306');
+define('DB_USERNAME', 'bisz6nf2u5ymifre');
+define('DB_PASSWORD', 'ufcnqnkte0ofavy8');
+define('DB_NAME', 'fizn07ewny2rctav');
+ 
+/* Attempt to connect to MySQL database */
+$db = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 		// Connect to the database. Please change the password in the following line accordingly
-		$db = pg_connect("host=localhost port=5432 dbname=postgres user=postgres password=000000");
+		//$db = mysqli_connect("host=localhost port=5432 dbname=postgres user=postgres password=000000");
 		date_default_timezone_set("Asia/Singapore");
 		$current_date = date("Y-m-d");
 		if ($_SESSION[userid] == NULL) {
@@ -59,8 +66,8 @@
 	<?php
 		}
 		if (isset($_POST[pub])) {
-			$id = pg_fetch_assoc(pg_query("SELECT COUNT(*) AS num FROM publish_projects"))[num] + 1;
-			$result = pg_query($db, "INSERT INTO publish_projects VALUES ('$_SESSION[userid]', '$id', '$_POST[title]', '$_POST[desc]', '$current_date', '$_POST[dura]', '$_POST[cat]', '$_POST[total]')");
+			$id = mysqli_fetch_assoc(mysqli_query("SELECT COUNT(*) AS num FROM publish_projects"))[num] + 1;
+			$result = mysqli_query($db, "INSERT INTO publish_projects VALUES ('$_SESSION[userid]', '$id', '$_POST[title]', '$_POST[desc]', '$current_date', '$_POST[dura]', '$_POST[cat]', '$_POST[total]')");
 			if (!$result) {
 				echo "<p>Invalid input(s)!</p>";
 			}

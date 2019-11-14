@@ -11,53 +11,62 @@
 		if ($_COOKIE[userid] != NULL && $_SESSION[userid] == NULL) {
 			$_SESSION[userid] = $_COOKIE[userid];
 		}
+    /* Database credentials. Assuming you are running MySQL
+server with default setting (user 'root' with no password)fdfggfg */
+define('DB_SERVER', 'lolyz0ok3stvj6f0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306');
+define('DB_USERNAME', 'bisz6nf2u5ymifre');
+define('DB_PASSWORD', 'ufcnqnkte0ofavy8');
+define('DB_NAME', 'fizn07ewny2rctav');
+ 
+/* Attempt to connect to MySQL database */
+$db = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 		// Connect to the database. Please change the password in the following line accordingly
-		$db = pg_connect("host=localhost port=5432 dbname=postgres user=postgres password=000000");
+		//$db = mysqli_connect("host=localhost port=5432 dbname=postgres user=postgres password=000000");
 		date_default_timezone_set("Asia/Singapore");
 		$current_time = date("Y-m-d H:i:s");
-		$users = pg_query($db, "SELECT * FROM users ORDER BY user_id");
-		$projects = pg_query($db, "SELECT * FROM publish_projects ORDER BY project_id");
-		$funds = pg_query($db, "SELECT * FROM fund ORDER BY user_id, project_id, fund_time");
+		$users = mysqli_query($db, "SELECT * FROM users ORDER BY user_id");
+		$projects = mysqli_query($db, "SELECT * FROM publish_projects ORDER BY project_id");
+		$funds = mysqli_query($db, "SELECT * FROM fund ORDER BY user_id, project_id, fund_time");
 		$effect = -1;
-		if ($_SESSION[userid] == NULL || pg_fetch_result(pg_query($db, "SELECT role FROM users WHERE user_id = '$_SESSION[userid]'"), 0, 0) != 1) {
+		if ($_SESSION[userid] == NULL || mysqli_fetch_result(mysqli_query($db, "SELECT role FROM users WHERE user_id = '$_SESSION[userid]'"), 0, 0) != 1) {
 			header('Location: index.php');
 		}
 		elseif (isset($_POST[cuser])) {
-			$effect = pg_query($db, "INSERT INTO users VALUES ('$_POST[cuser_id]', '$_POST[cpassword]', '$_POST[cname]', '$_POST[cemail]', '$_POST[cdate_of_registration]', '$_POST[crole]')");
+			$effect = mysqli_query($db, "INSERT INTO users VALUES ('$_POST[cuser_id]', '$_POST[cpassword]', '$_POST[cname]', '$_POST[cemail]', '$_POST[cdate_of_registration]', '$_POST[crole]')");
 		}
 		elseif (isset($_POST[uuser])) {
-			$past = pg_fetch_row($users, $_POST[iuser] - 1);
+			$past = mysqli_fetch_row($users, $_POST[iuser] - 1);
 			$current = array("user_id"=>($_POST[uuser_id] ? $_POST[uuser_id] : $past[0]), "name"=>($_POST[uname] ? $_POST[uname] : $past[2]), "email"=>($_POST[uemail] ? $_POST[uemail] : $past[3]), "date_of_registration"=>($_POST[udate_of_registration] ? $_POST[udate_of_registration] : $past[4]), "role"=>($_POST[urole] ? $_POST[urole] : $past[5]));
-			$effect = pg_query($db, "UPDATE users SET user_id = '$current[user_id]', name = '$current[name]', email = '$current[email]', date_of_registration = '$current[date_of_registration]', role = '$current[role]' WHERE user_id = '$past[0]'");
+			$effect = mysqli_query($db, "UPDATE users SET user_id = '$current[user_id]', name = '$current[name]', email = '$current[email]', date_of_registration = '$current[date_of_registration]', role = '$current[role]' WHERE user_id = '$past[0]'");
 		}
 		elseif (isset($_POST[duser])) {
-			$effect = pg_query($db, "DELETE FROM users WHERE user_id = '$_POST[duser_id]'");
+			$effect = mysqli_query($db, "DELETE FROM users WHERE user_id = '$_POST[duser_id]'");
 		}
 		elseif (isset($_POST[cproject])) {
-			$effect = pg_query($db, "INSERT INTO publish_projects VALUES ('$_POST[cpublisher]', '$_POST[cproject_id]', '$_POST[ctitle]', '$_POST[cdescription]', '$_POST[cstart_date]', '$_POST[cduration]', '$_POST[ccategory]', '$_POST[ctotal_amount]', '$_POST[ccurrent_amount]')");
+			$effect = mysqli_query($db, "INSERT INTO publish_projects VALUES ('$_POST[cpublisher]', '$_POST[cproject_id]', '$_POST[ctitle]', '$_POST[cdescription]', '$_POST[cstart_date]', '$_POST[cduration]', '$_POST[ccategory]', '$_POST[ctotal_amount]', '$_POST[ccurrent_amount]')");
 		}
 		elseif (isset($_POST[uproject])) {
-			$past = pg_fetch_row($projects, $_POST[iproject] - 1);
+			$past = mysqli_fetch_row($projects, $_POST[iproject] - 1);
 			$current = array("publisher"=>($_POST[upublisher] ? $_POST[upublisher] : $past[0]), "project_id"=>($_POST[uproject_id] ? $_POST[uproject_id] : $past[1]), "title"=>($_POST[utitle] ? $_POST[utitle] : $past[2]), "description"=>($_POST[udescription] ? $_POST[udescription] : $past[3]), "start_date"=>($_POST[ustart_date] ? $_POST[ustart_date] : $past[4]), "duration"=>($_POST[uduration] ? $_POST[uduration] : $past[5]), "category"=>($_POST[ucategory] ? $_POST[ucategory] : $past[6]), "total_amount"=>($_POST[utotal_amount] ? $_POST[utotal_amount] : $past[7]), "current_amount"=>($_POST[ucurrent_amount] ? $_POST[ucurrent_amount] : $past[8]));
-			$effect = pg_query($db, "UPDATE publish_projects SET publisher = '$current[publisher]', project_id = '$current[project_id]', title = '$current[title]', description = '$current[description]', start_date = '$current[start_date]', duration = '$current[duration]', category = '$current[category]', total_amount = '$current[total_amount]', current_amount = '$current[current_amount]' WHERE project_id = '$past[1]'");
+			$effect = mysqli_query($db, "UPDATE publish_projects SET publisher = '$current[publisher]', project_id = '$current[project_id]', title = '$current[title]', description = '$current[description]', start_date = '$current[start_date]', duration = '$current[duration]', category = '$current[category]', total_amount = '$current[total_amount]', current_amount = '$current[current_amount]' WHERE project_id = '$past[1]'");
 		}
 		elseif (isset($_POST[dproject])) {
-			$effect = pg_query($db, "DELETE FROM publish_projects WHERE project_id = '$_POST[dproject_id]'");
+			$effect = mysqli_query($db, "DELETE FROM publish_projects WHERE project_id = '$_POST[dproject_id]'");
 		}
 		elseif (isset($_POST[cfund])) {
-			$effect = pg_query($db, "INSERT INTO fund VALUES ('$_POST[cfuser_id]', '$_POST[cfproject_id]', '$_POST[cfund_time]', '$_POST[camount]')");
+			$effect = mysqli_query($db, "INSERT INTO fund VALUES ('$_POST[cfuser_id]', '$_POST[cfproject_id]', '$_POST[cfund_time]', '$_POST[camount]')");
 		}
 		elseif (isset($_POST[ufund])) {
-			$past = pg_fetch_row($funds, $_POST[ifund] - 1);
+			$past = mysqli_fetch_row($funds, $_POST[ifund] - 1);
 			$current = array("user_id"=>($_POST[ufuser_id] ? $_POST[ufuser_id] : $past[0]), "project_id"=>($_POST[ufproject_id] ? $_POST[ufproject_id] : $past[1]), "fund_time"=>($_POST[ufund_time] ? $_POST[ufund_time] : $past[2]), "amount"=>($_POST[uamount] ? $_POST[uamount] : $past[3]));
-			$effect = pg_query($db, "UPDATE fund SET user_id = '$current[user_id]', project_id = '$current[project_id]', fund_time = '$current[fund_time]', amount = '$current[amount]' WHERE user_id = '$past[0]' AND project_id = '$past[1]' AND fund_time = '$past[2]'");
+			$effect = mysqli_query($db, "UPDATE fund SET user_id = '$current[user_id]', project_id = '$current[project_id]', fund_time = '$current[fund_time]', amount = '$current[amount]' WHERE user_id = '$past[0]' AND project_id = '$past[1]' AND fund_time = '$past[2]'");
 		}
 		elseif (isset($_POST[dfund])) {
-			$effect = pg_query($db, "DELETE FROM fund WHERE user_id = '$_POST[dfuser_id]' AND project_id = '$_POST[dfproject_id]' AND fund_time = '$_POST[dfund_time]'");
+			$effect = mysqli_query($db, "DELETE FROM fund WHERE user_id = '$_POST[dfuser_id]' AND project_id = '$_POST[dfproject_id]' AND fund_time = '$_POST[dfund_time]'");
 		}
-		$usersx = pg_query($db, "SELECT * FROM users ORDER BY user_id");
-		$projectsx = pg_query($db, "SELECT * FROM publish_projects ORDER BY project_id");
-		$fundsx = pg_query($db, "SELECT * FROM fund ORDER BY user_id, project_id, fund_time");
+		$usersx = mysqli_query($db, "SELECT * FROM users ORDER BY user_id");
+		$projectsx = mysqli_query($db, "SELECT * FROM publish_projects ORDER BY project_id");
+		$fundsx = mysqli_query($db, "SELECT * FROM fund ORDER BY user_id, project_id, fund_time");
 	?>
 	<form name="display" action="index.php" method="GET">
 		<button type="submit">Return to Homepage</button>
@@ -73,7 +82,7 @@
 			<th>Role</th>
 			<?php
 				$count = 0;
-				while ($row = pg_fetch_assoc($usersx)) {
+				while ($row = mysqli_fetch_assoc($usersx)) {
 					$count = $count + 1;
 			?>
 				<tr>
@@ -143,7 +152,7 @@
 			<th>Publisher</th>
 			<?php
 				$count = 0;
-				while ($row = pg_fetch_assoc($projectsx)) {
+				while ($row = mysqli_fetch_assoc($projectsx)) {
 					$count = $count + 1;
 			?>
 				<tr>
@@ -224,7 +233,7 @@
 			<th>Amount</th>
 			<?php
 				$count = 0;
-				while ($row = pg_fetch_assoc($fundsx)) {
+				while ($row = mysqli_fetch_assoc($fundsx)) {
 					$count = $count + 1;
 			?>
 				<tr>

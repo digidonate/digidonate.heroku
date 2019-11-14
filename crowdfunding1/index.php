@@ -67,20 +67,15 @@
 	</div>
 	<?php
 		// Connect to the database. Please change the password in the following line accordingly
-    
-    define('DB_NAME', 'fizn07ewny2rctav');
-define('DB_USER', 'bisz6nf2u5ymifre');
+define('DB_SERVER', 'lolyz0ok3stvj6f0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306');
+define('DB_USERNAME', 'bisz6nf2u5ymifre');
 define('DB_PASSWORD', 'ufcnqnkte0ofavy8');
-define('DB_HOST', 'lolyz0ok3stvj6f0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306');
+define('DB_NAME', 'fizn07ewny2rctav');
  
 /* Attempt to connect to MySQL database */
-$link = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
- 
-// Check connection
-if($link === false){
-    die("ERROR: Could not connect. " . mysqli_connect_error());
-}
-	//	$db = pg_connect("host=localhost port=5432 dbname=postgres user=postgres password=000000");
+$db = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+		// Connect to the database. Please change the password in the following line accordingly
+		//$db = mysqli_connect("host=localhost port=5432 dbname=postgres user=postgres password=000000");
 		date_default_timezone_set("Asia/Singapore");
 		$current_date = date("Y-m-d");
 		session_start();
@@ -88,7 +83,7 @@ if($link === false){
 			$_SESSION[userid] = $_COOKIE[userid];
 		}
 		if (isset($_POST[signup])) {
-			$result = pg_query($db, "INSERT INTO users VALUES ('$_POST[uname]', '$_POST[psw]', '$_POST[name]', '$_POST[email]', '$current_date')");
+			$result = mysqli_query($db, "INSERT INTO users VALUES ('$_POST[uname]', '$_POST[psw]', '$_POST[name]', '$_POST[email]', '$current_date')");
 			if (!$result) {
 				echo "<p>Invalid input(s)!</p>";
 			}
@@ -104,7 +99,7 @@ if($link === false){
 			}
 		}
 		if (isset($_POST[signin])) {
-			$user = pg_fetch_assoc(pg_query($db, "SELECT * FROM users WHERE users.user_id = '$_POST[uid]'"));
+			$user = mysqli_fetch_assoc(mysqli_query($db, "SELECT * FROM users WHERE users.user_id = '$_POST[uid]'"));
 			if ($user[password] != $_POST[pass]) {
 				echo "<p>Invalid input(s)!</p>";
 			}
@@ -143,7 +138,7 @@ if($link === false){
 	</form>
 	<br/>
 	<?php
-		$admintest = pg_fetch_result(pg_query($db, "SELECT role FROM users WHERE user_id = '$_SESSION[userid]'"), 0, 0);
+		$admintest = mysqli_fetch_result(mysqli_query($db, "SELECT role FROM users WHERE user_id = '$_SESSION[userid]'"), 0, 0);
 		if ($admintest == 1) {
 			echo "You are logged in as an ADMINISTRATOR. If you know what you are doing, click <a href=admin.php>here<a> to go to the management page.<br/>";
 		}
