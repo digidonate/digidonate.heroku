@@ -67,15 +67,7 @@
 	</div>
 	<?php
 		// Connect to the database. Please change the password in the following line accordingly
-define('DB_SERVER', 'lolyz0ok3stvj6f0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306');
-define('DB_USERNAME', 'bisz6nf2u5ymifre');
-define('DB_PASSWORD', 'ufcnqnkte0ofavy8');
-define('DB_NAME', 'fizn07ewny2rctav');
- 
-/* Attempt to connect to MySQL database */
-$db = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
-		// Connect to the database. Please change the password in the following line accordingly
-		//$db = mysqli_connect("host=localhost port=5432 dbname=postgres user=postgres password=000000");
+		$db = mysqli_connect("host=lolyz0ok3stvj6f0.cbetxkdyhwsb.us-east-1.rds.amazonaws.com port=3306 dbname=fizn07ewny2rctav user=bisz6nf2u5ymifre password=ufcnqnkte0ofavy8");
 		date_default_timezone_set("Asia/Singapore");
 		$current_date = date("Y-m-d");
 		session_start();
